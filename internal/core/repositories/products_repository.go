@@ -2,7 +2,7 @@ package repositories
 
 import (
 	"context"
-	"fmt"
+	"log"
 
 	"github.com/Mohamed-Abdelrazeq/inventory-management-system/internal/database"
 	"github.com/Mohamed-Abdelrazeq/inventory-management-system/internal/loaders"
@@ -10,9 +10,9 @@ import (
 
 type ProductsRepository interface {
 	GetProducts(database.GetProductsByLocationIdParams) ([]database.GetProductsByLocationIdRow, error)
-	GetProductById()
-	CreateProduct()
-	UpdateProduct()
+	GetProductById(id int32) (database.Product, error)
+	CreateProduct(database.CreateProductParams) (database.Product, error)
+	UpdateProduct(database.UpdateProductParams) (database.Product, error)
 }
 
 type ProductsRepositoryInstance struct {
@@ -24,22 +24,38 @@ func NewProductRepository(db *loaders.DatabaseInstance) ProductsRepository {
 }
 
 func (repo ProductsRepositoryInstance) GetProducts(params database.GetProductsByLocationIdParams) ([]database.GetProductsByLocationIdRow, error) {
-	data, err := repo.DB.DB.GetProductsByLocationId(context.TODO(), params)
+	products, err := repo.DB.DB.GetProductsByLocationId(context.TODO(), params)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
+		return products, err
 	}
-
-	return data, err
+	return products, nil
 }
 
-func (repo ProductsRepositoryInstance) GetProductById() {
+func (repo ProductsRepositoryInstance) GetProductById(id int32) (database.Product, error) {
+	product, err := repo.DB.DB.GetProductById(context.TODO(), id)
+	if err != nil {
+		log.Println(err)
+		return product, err
+	}
+	return product, nil
+}
+
+func (repo ProductsRepositoryInstance) CreateProduct(params database.CreateProductParams) (database.Product, error) {
+	product, err := repo.DB.DB.CreateProduct(context.TODO(), params)
+	if err != nil {
+		log.Println(err)
+		return product, err
+	}
+	return product, nil
 
 }
 
-func (repo ProductsRepositoryInstance) CreateProduct() {
-
-}
-
-func (repo ProductsRepositoryInstance) UpdateProduct() {
-
+func (repo ProductsRepositoryInstance) UpdateProduct(params database.UpdateProductParams) (database.Product, error) {
+	product, err := repo.DB.DB.UpdateProduct(context.TODO(), params)
+	if err != nil {
+		log.Println(err)
+		return product, err
+	}
+	return product, nil
 }

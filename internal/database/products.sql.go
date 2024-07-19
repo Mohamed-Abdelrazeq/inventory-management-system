@@ -10,7 +10,7 @@ import (
 	"database/sql"
 )
 
-const createProduct = `-- name: CreateProduct :many
+const createProduct = `-- name: CreateProduct :one
 INSERT INTO products (product_name, description, unit_price, supplier_id)
 VALUES ($1, $2, $3, $4)
 RETURNING product_id, product_name, description, unit_price, supplier_id
@@ -23,47 +23,31 @@ type CreateProductParams struct {
 	SupplierID  int32
 }
 
-func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) ([]Product, error) {
-	rows, err := q.db.QueryContext(ctx, createProduct,
+func (q *Queries) CreateProduct(ctx context.Context, arg CreateProductParams) (Product, error) {
+	row := q.db.QueryRowContext(ctx, createProduct,
 		arg.ProductName,
 		arg.Description,
 		arg.UnitPrice,
 		arg.SupplierID,
 	)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var items []Product
-	for rows.Next() {
-		var i Product
-		if err := rows.Scan(
-			&i.ProductID,
-			&i.ProductName,
-			&i.Description,
-			&i.UnitPrice,
-			&i.SupplierID,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+	var i Product
+	err := row.Scan(
+		&i.ProductID,
+		&i.ProductName,
+		&i.Description,
+		&i.UnitPrice,
+		&i.SupplierID,
+	)
+	return i, err
 }
 
-const getProdcutById = `-- name: GetProdcutById :one
+const getProductById = `-- name: GetProductById :one
 SELECT product_id, product_name, description, unit_price, supplier_id FROM products
 WHERE product_id = $1
 `
 
-func (q *Queries) GetProdcutById(ctx context.Context, productID int32) (Product, error) {
-	row := q.db.QueryRowContext(ctx, getProdcutById, productID)
+func (q *Queries) GetProductById(ctx context.Context, productID int32) (Product, error) {
+	row := q.db.QueryRowContext(ctx, getProductById, productID)
 	var i Product
 	err := row.Scan(
 		&i.ProductID,

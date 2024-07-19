@@ -16,11 +16,11 @@ LIMIT $2
 OFFSET $3
 ;
 
--- name: GetProdcutById :one
+-- name: GetProductById :one
 SELECT * FROM products
 WHERE product_id = $1;
 
--- name: CreateProduct :many
+-- name: CreateProduct :one
 INSERT INTO products (product_name, description, unit_price, supplier_id)
 VALUES ($1, $2, $3, $4)
 RETURNING *;
