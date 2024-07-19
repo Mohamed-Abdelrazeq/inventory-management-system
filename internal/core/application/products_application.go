@@ -1,34 +1,37 @@
 package applications
 
-import "github.com/Mohamed-Abdelrazeq/inventory-management-system/internal/core/repositories"
+import (
+	"github.com/Mohamed-Abdelrazeq/inventory-management-system/internal/core/repositories"
+	"github.com/Mohamed-Abdelrazeq/inventory-management-system/internal/database"
+)
 
 type ProductsApplication interface {
-	GetProducts()
+	GetProducts(database.GetProductsByLocationIdParams) ([]database.GetProductsByLocationIdRow, error)
 	GetProductById()
 	CreateProduct()
 	UpdateProduct()
 }
 
 type ProductsApplicationInstance struct {
-	ProductsRepository *repositories.ProductsRepository
+	ProductsRepository repositories.ProductsRepository
 }
 
 func NewProductRepository(productsRepository *repositories.ProductsRepository) ProductsApplication {
-	return ProductsApplicationInstance{productsRepository}
+	return ProductsApplicationInstance{*productsRepository}
 }
 
-func (hander ProductsApplicationInstance) GetProducts() {
-
+func (app ProductsApplicationInstance) GetProducts(params database.GetProductsByLocationIdParams) ([]database.GetProductsByLocationIdRow, error) {
+	return app.ProductsRepository.GetProducts(params)
 }
 
-func (hander ProductsApplicationInstance) GetProductById() {
-
-}
-
-func (hander ProductsApplicationInstance) CreateProduct() {
+func (app ProductsApplicationInstance) GetProductById() {
 
 }
 
-func (hander ProductsApplicationInstance) UpdateProduct() {
+func (app ProductsApplicationInstance) CreateProduct() {
+
+}
+
+func (app ProductsApplicationInstance) UpdateProduct() {
 
 }

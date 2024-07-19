@@ -8,34 +8,34 @@ import (
 	"database/sql"
 )
 
-type Addresses struct {
-	AddressID int64
+type Address struct {
+	AddressID int32
 	Latitude  float64
 	Longitude float64
 }
 
-type Locations struct {
-	LocationID   int64
+type Location struct {
+	LocationID   int32
 	LocationName string
-	AddressID    int64
+	AddressID    int32
 }
 
-type Products struct {
-	ProductID   int64
+type Product struct {
+	ProductID   int32
 	ProductName string
 	Description sql.NullString
 	UnitPrice   float64
-	SupplierID  int64
+	SupplierID  int32
 }
 
-type Stocks struct {
-	ProductID  sql.NullInt64
-	LocationID sql.NullInt64
-	Quantity   int64
+type Stock struct {
+	ProductID  int32
+	LocationID int32
+	Quantity   int32
 }
 
-type Suppliers struct {
-	SupplierID   int64
+type Supplier struct {
+	SupplierID   int32
 	SupplierName string
 	Phone        string
 	Mail         string

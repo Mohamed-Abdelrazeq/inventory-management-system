@@ -24,7 +24,8 @@ func main() {
 
 	productRouter := r.Group("/products/")
 	productRouter.GET(":id", productsHandler.GetProductById)
-	productRouter.GET("", productsHandler.GetProducts)
+	productRouter.GET("location/:id", productsHandler.GetProducts)
+	productRouter.GET("supplier/:id", productsHandler.GetProducts)
 	productRouter.POST("", productsHandler.CreateProduct)
 	productRouter.PUT("", productsHandler.UpdateProduct)
 	// Run Server
